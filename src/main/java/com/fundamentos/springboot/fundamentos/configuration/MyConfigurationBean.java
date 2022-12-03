@@ -1,6 +1,7 @@
 package com.fundamentos.springboot.fundamentos.configuration;
 
 import com.fundamentos.springboot.fundamentos.bean.*;
+import org.springframework.boot.context.properties.bind.ConstructorBinding;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
