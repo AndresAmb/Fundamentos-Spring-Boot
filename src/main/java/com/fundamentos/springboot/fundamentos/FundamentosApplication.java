@@ -53,13 +53,36 @@ public class FundamentosApplication implements CommandLineRunner {
 	}
 
 	public void getInformationJpqlFromUser(){
-		 LOGGER.info("Usuario con el metod findByUserEmail"+ userRepository.findByUserEmail("gaby@mail.com").orElseThrow(()->new RuntimeException("No se encontró el usuario")));
+		 /*LOGGER.info("Usuario con el metod findByUserEmail"+ userRepository.findByUserEmail("gaby@mail.com").orElseThrow(()->new RuntimeException("No se encontró el usuario")));
 
 		 userRepository.findAndSort("user", Sort.by("id").ascending()).stream().forEach(user -> LOGGER.info("Usuario con metodo sort " + user));
 
 		 userRepository.findByName("Andres").stream().forEach(user -> LOGGER.info("Usuario con query method" + user));
 
 		 LOGGER.info("Usuario con query method findByEmailAndName" + userRepository.findByEmailAndName("andres@mail.com","Andres").orElseThrow(()-> new RuntimeException("Usuario no encontrado")));
+
+		 userRepository.findByNameLike("%A%")
+				 .stream()
+				 .forEach(user -> LOGGER.info("Usuario findByNameLike " + user));
+
+		userRepository.findByNameOrEmail("user10",null)
+				.stream()
+				.forEach(user -> LOGGER.info("Usuario findByNameOrEmail " + user));*/
+
+		userRepository
+				.findByBirthDateBetween(LocalDate.of(2021,3,1), LocalDate.of(2021,4,2))
+				.stream()
+				.forEach(user -> LOGGER.info("Usuario con intervalo de fechas: " + user));
+
+		userRepository.findByNameContainingOrderByIdDesc("user")
+				.stream()
+				.forEach(user -> LOGGER.info("Usuario encontrado con like y ordenado: " + user));
+
+		LOGGER.info("El usuario a partir del named parameter es: " + userRepository.getAllByBirthDateAndEmail(LocalDate.of(2021,03,20), "andres@mail.com")
+				.orElseThrow(()->new RuntimeException("No se encontró el usuario a partir del named parameter")));
+
+
+
 	}
 	private void saveUserInDataBase(){
 		 User user1 = new User("Andres","andres@mail.com", LocalDate.of(2021,03,20));
