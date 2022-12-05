@@ -6,6 +6,7 @@ import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.jta.UserTransactionAdapter;
@@ -39,5 +40,7 @@ public interface UserRepository extends JpaRepository<User,Long> {
             " and u.email=:parametroEmail ")
     Optional<UserDto> getAllByBirthDateAndEmail(@Param("parametroFecha") LocalDate date,
                                                 @Param("parametroEmail") String email);
+
+
 
 }

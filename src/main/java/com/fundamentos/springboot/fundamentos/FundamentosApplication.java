@@ -10,6 +10,7 @@ import com.fundamentos.springboot.fundamentos.components.ComponentTwoImplement;
 import com.fundamentos.springboot.fundamentos.entity.User;
 import com.fundamentos.springboot.fundamentos.pojo.UserPojo;
 import com.fundamentos.springboot.fundamentos.repository.UserRepository;
+import com.fundamentos.springboot.fundamentos.services.UserService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -32,13 +33,16 @@ public class FundamentosApplication implements CommandLineRunner {
 	private MyBeanWithProperties myBeanWithProperties;
 	private UserPojo userPojo;
 	private UserRepository userRepository;
-	 public FundamentosApplication(@Qualifier("componentTwoImplement") ComponentDependecy componentDependecy, MyBean myBean, MyBeanWithDependency myBeanWithDependency, MyBeanWithProperties myBeanWithProperties, UserPojo userPojo, UserRepository userRepository){
+
+	private UserService userService;
+	 public FundamentosApplication(@Qualifier("componentTwoImplement") ComponentDependecy componentDependecy, MyBean myBean, MyBeanWithDependency myBeanWithDependency, MyBeanWithProperties myBeanWithProperties, UserPojo userPojo, UserRepository userRepository, UserService userService){
 		 this.componentDependecy = componentDependecy;
 		 this.myBean = myBean;
 		 this.myBeanWithDependency = myBeanWithDependency;
 		 this.myBeanWithProperties = myBeanWithProperties;
 		 this.userPojo = userPojo;
 		 this.userRepository = userRepository;
+		 this.userService = userService;
 	 }
 
 	public static void main(String[] args) {
@@ -50,6 +54,26 @@ public class FundamentosApplication implements CommandLineRunner {
 		//ejemplosAnteriores();
 		saveUserInDataBase();
 		getInformationJpqlFromUser();
+		saveWithErrorTransactional();
+	}
+
+	private void saveWithErrorTransactional(){
+		 User test1 = new User("test1Transactional1","test1Transactional1@domain.com",LocalDate.now());
+		 User test2 = new User("test2Transactional1","test2Transactional1@domain.com",LocalDate.now());
+		 User test3 = new User("test3Transactional1","test1Transactional1@domain.com",LocalDate.now());
+		 User test4 = new User("test4Transactional1","test4Transactional1@domain.com",LocalDate.now());
+
+		 List<User> users = Arrays.asList(test1, test2, test3, test4);
+
+		 try {
+			 userService.saveTransactional(users);
+		 }catch (Exception e){
+			 LOGGER.error("Esta es una exception dentro del metodo transactional " + e);
+		 }
+
+		 userService.getAllUsers().stream()
+				 .forEach(user ->
+						 LOGGER.info("Este es el usuario mediante el metodo transactional: " + user));
 	}
 
 	public void getInformationJpqlFromUser(){
